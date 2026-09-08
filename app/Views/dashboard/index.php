@@ -844,8 +844,10 @@
             <span>Configuración</span>
         </li>
         <li>
-            <i class="fas fa-sign-out-alt"></i>
-            <span>Cerrar Sesión</span>
+            <a href="<?= base_url('logout') ?>" style="text-decoration: none; color: rgba(255,255,255,0.65); display: flex; align-items: center; gap: 14px; padding: 12px 20px; width: 100%; transition: all 0.2s ease;">
+                <i class="fas fa-sign-out-alt"></i>
+                <span>Cerrar Sesión</span>
+            </a>
         </li>
     </ul>
 </aside>

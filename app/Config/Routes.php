@@ -7,6 +7,7 @@ use CodeIgniter\Router\RouteCollection;
 $routes->get('/login', 'Auth::login');
 $routes->post('/login', 'Auth::attemptLogin');
 $routes->get('/logout', 'Auth::logout');
+$routes->post('/logout', 'Auth::logout');
 
 
 // Dashboard route with authentication filter

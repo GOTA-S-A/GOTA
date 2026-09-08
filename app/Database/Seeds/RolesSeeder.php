@@ -13,6 +13,6 @@ class RolesSeeder extends Seeder
             ['nombre' => 'Secretaria'],
             ['nombre' => 'Lector'],
         ];
-        $this->db->table('roles')->insertBatch($data);
+        $this->db->table('Roles')->insertBatch($data);
     }
 }

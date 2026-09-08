@@ -15,6 +15,6 @@ class UsuarioAdminSeeder extends Seeder
             'rol_id'        => 1, // Administrador
             'created_at'    => date('Y-m-d H:i:s'),
         ];
-        $this->db->table('usuarios')->insert($data);
+        $this->db->table('Usuarios')->insert($data);
     }
 }

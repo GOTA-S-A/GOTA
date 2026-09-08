@@ -6,14 +6,14 @@ use CodeIgniter\Model;
 
 class UsuarioModel extends Model
 {
-    protected $table            = 'usuarios';
+    protected $table            = 'Usuarios';
     protected $primaryKey       = 'id';
     protected $allowedFields    = ['nombre', 'email', 'password_hash', 'rol_id', 'created_at'];
     protected $useTimestamps    = false;
 
     protected $validationRules = [
         'nombre' => 'required|min_length[3]',
-        'email'  => 'required|valid_email|is_unique[usuarios.email,id,{id}]',
+        'email'  => 'required|valid_email|is_unique[Usuarios.email,id,{id}]',
         'rol_id' => 'required|integer',
     ];
 
