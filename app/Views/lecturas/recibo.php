@@ -46,6 +46,7 @@
         font-size: 1.1rem;
         background: linear-gradient(135deg, #0d6efd, #0a58ca);
         -webkit-background-clip: text;
+        background-clip: text;
         -webkit-text-fill-color: transparent;
     }
     .app-header .brand small {
@@ -130,6 +131,15 @@
         text-align: center;
     }
 
+    .receipt-section-title {
+        font-size: 0.7rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        color: var(--secondary);
+        font-weight: 700;
+        padding: 16px 20px 4px;
+    }
+
     .bottom-nav {
         position: fixed; bottom: 0; left: 0; right: 0; background: #fff;
         display: flex; justify-content: space-around; align-items: center;
@@ -184,8 +194,16 @@
 
 <?php
 /**
- * @var array $lectura  Registro completo de la tabla "lecturas"
+ * @var array      $lectura      Registro completo de la tabla Lecturas
+ * @var array|null $contador     Registro del contador asociado a la lectura
+ * @var array|null $cliente      Registro del cliente dueño del contador
+ * @var array|null $tipoServicio Registro del tipo de servicio del contador
  */
+
+// El desglose base/exceso solo se muestra si de verdad hubo consumo
+// excedente. Si el consumo cupo dentro del volumen incluido, mostrar
+// esas filas solo confundiría al cliente con un "Q0.00" sin sentido.
+$hayExceso = (float) ($lectura['consumo_exceso_m3'] ?? 0) > 0;
 ?>
 
 <header class="app-header">
@@ -249,46 +267,131 @@
             <h4 class="mb-0">Recibo de Consumo de Agua</h4>
             <small>Sistema GOTA</small>
         </div>
-        <div class="p-4">
+
+        <!-- Datos del cliente: si por algún motivo el contador o el
+             cliente no se encontraron (dato huérfano), mostramos un
+             aviso en vez de romper la página con un error de índice. -->
+        <?php if ($cliente): ?>
+            <div class="receipt-section-title">Datos del cliente</div>
+            <div class="px-4 pb-2">
+                <table class="table table-borderless mb-0">
+                    <tr>
+                        <th style="width: 40%;">Nombre:</th>
+                        <td><?= esc($cliente['nombre']) ?></td>
+                    </tr>
+                    <tr>
+                        <th>Dirección:</th>
+                        <td><?= esc($cliente['direccion']) ?></td>
+                    </tr>
+                    <?php if (! empty($cliente['telefono'])): ?>
+                    <tr>
+                        <th>Teléfono:</th>
+                        <td><?= esc($cliente['telefono']) ?></td>
+                    </tr>
+                    <?php endif; ?>
+                    <?php if (! empty($cliente['email'])): ?>
+                    <tr>
+                        <th>Correo:</th>
+                        <td><?= esc($cliente['email']) ?></td>
+                    </tr>
+                    <?php endif; ?>
+                </table>
+            </div>
+        <?php else: ?>
+            <div class="px-4 pt-3">
+                <div class="alert alert-warning mb-0">
+                    No se encontraron los datos del cliente para este contador.
+                </div>
+            </div>
+        <?php endif; ?>
+
+        <div class="receipt-section-title">Datos del contador</div>
+        <div class="px-4 pb-2">
             <table class="table table-borderless mb-0">
                 <tr>
-                    <th>Contador:</th>
-                    <td>#<?= esc((string) $lectura['contador_id']) ?></td>
+                    <th style="width: 40%;">Código:</th>
+                    <td><?= esc($contador['codigo'] ?? ('#' . $lectura['contador_id'])) ?></td>
+                </tr>
+                <?php if (! empty($contador['sector'])): ?>
+                <tr>
+                    <th>Sector:</th>
+                    <td><?= esc($contador['sector']) ?></td>
+                </tr>
+                <?php endif; ?>
+                <?php if ($tipoServicio): ?>
+                <tr>
+                    <th>Tipo de servicio:</th>
+                    <td><?= esc($tipoServicio['nombre']) ?></td>
+                </tr>
+                <?php endif; ?>
+            </table>
+        </div>
+
+        <div class="receipt-section-title">Lectura</div>
+        <div class="px-4 pb-2">
+            <table class="table table-borderless mb-0">
+                <tr>
+                    <th style="width: 40%;">Fecha de lectura:</th>
+                    <td><?= esc(date('d/m/Y', strtotime($lectura['fecha_lectura']))) ?></td>
                 </tr>
                 <tr>
-                    <th>Fecha de lectura:</th>
-                    <td><?= esc(date('d/m/Y', strtotime($lectura['fecha']))) ?></td>
+                    <th>Período:</th>
+                    <td><?= esc(date('m/Y', strtotime($lectura['periodo']))) ?></td>
                 </tr>
                 <tr>
                     <th>Lectura anterior:</th>
-                    <td><?= esc((string) $lectura['lectura_anterior']) ?></td>
+                    <td><?= esc((string) $lectura['lectura_anterior']) ?> m³</td>
                 </tr>
                 <tr>
                     <th>Lectura actual:</th>
-                    <td><?= esc((string) $lectura['lectura_actual']) ?></td>
+                    <td><?= esc((string) $lectura['lectura_actual']) ?> m³</td>
                 </tr>
                 <tr class="table-active">
-                    <th>Consumo:</th>
-                    <td><strong><?= esc((string) $lectura['consumo']) ?></strong></td>
-                </tr>
-                <tr>
-                    <th>Tarifa aplicada:</th>
-                    <td>
-                        <?php if ($lectura['tarifa_id'] !== null): ?>
-                            #<?= esc((string) $lectura['tarifa_id']) ?>
-                        <?php else: ?>
-                            <span class="text-muted">Tarifa de prueba</span>
-                        <?php endif; ?>
-                    </td>
-                </tr>
-                <tr class="table-success">
-                    <th>Monto a pagar:</th>
-                    <td><strong>Q<?= esc(number_format((float) $lectura['monto'], 2)) ?></strong></td>
+                    <th>Consumo total:</th>
+                    <td><strong><?= esc((string) $lectura['consumo']) ?> m³</strong></td>
                 </tr>
             </table>
         </div>
+
+        <div class="receipt-section-title">Cobro</div>
+        <div class="px-4 pb-2">
+            <table class="table table-borderless mb-0">
+                <?php if ($hayExceso): ?>
+                    <!-- Solo se desglosa base/exceso cuando de verdad hubo
+                         consumo excedente. Con consumo dentro del volumen
+                         incluido, esto se omite para no confundir con
+                         filas en Q0.00. -->
+                    <tr>
+                        <th style="width: 55%;">Consumo dentro de tarifa base:</th>
+                        <td><?= esc((string) $lectura['consumo_base_m3']) ?> m³ × Q<?= esc(number_format((float) $lectura['tarifa_base_valor'], 2)) ?></td>
+                    </tr>
+                    <tr>
+                        <th>Monto base:</th>
+                        <td>Q<?= esc(number_format((float) $lectura['monto_base'], 2)) ?></td>
+                    </tr>
+                    <tr>
+                        <th>Consumo excedente:</th>
+                        <td><?= esc((string) $lectura['consumo_exceso_m3']) ?> m³ × Q<?= esc(number_format((float) $lectura['tarifa_exceso_valor'], 2)) ?></td>
+                    </tr>
+                    <tr>
+                        <th>Monto por excedente:</th>
+                        <td>Q<?= esc(number_format((float) $lectura['monto_exceso'], 2)) ?></td>
+                    </tr>
+                <?php else: ?>
+                    <tr>
+                        <th style="width: 55%;">Tarifa aplicada:</th>
+                        <td>Q<?= esc(number_format((float) $lectura['tarifa_base_valor'], 2)) ?> por m³</td>
+                    </tr>
+                <?php endif; ?>
+                <tr class="table-success">
+                    <th>Monto total a pagar:</th>
+                    <td><strong>Q<?= esc(number_format((float) $lectura['monto_total'], 2)) ?></strong></td>
+                </tr>
+            </table>
+        </div>
+
         <div class="text-center text-muted py-3 border-top">
-            <small>Generado el <?= date('d/m/Y H:i') ?></small>
+            <small>Recibo #<?= esc((string) $lectura['id']) ?> — Generado el <?= date('d/m/Y H:i') ?></small>
         </div>
     </div>
 
