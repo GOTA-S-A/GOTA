@@ -45,6 +45,7 @@
         font-size: 1.1rem;
         background: linear-gradient(135deg, #0d6efd, #0a58ca);
         -webkit-background-clip: text;
+        background-clip: text;
         -webkit-text-fill-color: transparent;
     }
     .app-header .brand small {
@@ -122,6 +123,21 @@
         border: 1px solid rgba(0,0,0,0.03);
     }
 
+    .contador-info {
+        background: #f0f6ff;
+        border: 1px solid #d6e6ff;
+        border-radius: 12px;
+        padding: 14px 16px;
+        margin-bottom: 20px;
+        font-size: 0.85rem;
+    }
+    .contador-info .label {
+        color: var(--secondary);
+        font-size: 0.7rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
     .bottom-nav {
         position: fixed; bottom: 0; left: 0; right: 0; background: #fff;
         display: flex; justify-content: space-around; align-items: center;
@@ -153,8 +169,10 @@
 
 <?php
 /**
- * @var int $contador_id
- * @var float $lectura_anterior
+ * @var int        $contador_id
+ * @var float      $lectura_anterior
+ * @var array|null $contador
+ * @var array|null $tipoServicio
  */
 ?>
 
@@ -219,6 +237,28 @@
             </div>
         <?php endif; ?>
 
+        <?php if ($contador): ?>
+            <!-- Info del contador/cliente para que el Lector confirme que
+                 está tomando la lectura del predio correcto antes de
+                 ingresar el número. -->
+            <div class="contador-info">
+                <div class="label">Código de contador</div>
+                <div class="fw-semibold mb-2"><?= esc($contador['codigo']) ?></div>
+                <?php if (! empty($contador['sector'])): ?>
+                    <div class="label">Sector</div>
+                    <div class="fw-semibold mb-2"><?= esc($contador['sector']) ?></div>
+                <?php endif; ?>
+                <?php if ($tipoServicio): ?>
+                    <div class="label">Tipo de servicio</div>
+                    <div class="fw-semibold"><?= esc($tipoServicio['nombre']) ?></div>
+                <?php endif; ?>
+            </div>
+        <?php else: ?>
+            <div class="alert alert-warning">
+                No se encontró información de este contador. Verifica el número antes de continuar.
+            </div>
+        <?php endif; ?>
+
         <form action="<?= site_url('lecturas/guardar') ?>" method="post">
             <?= csrf_field() ?>
             <input type="hidden" name="contador_id" value="<?= esc((string) $contador_id) ?>">
@@ -226,11 +266,15 @@
             <div class="mb-3">
                 <label class="form-label">Lectura anterior</label>
                 <input type="text" class="form-control" value="<?= esc((string) $lectura_anterior) ?>" disabled>
+                <!-- Este campo oculto es solo informativo para el humano.
+                     El cálculo real en el servidor SIEMPRE vuelve a
+                     consultar la última lectura de la BD, nunca confía
+                     en este valor. -->
                 <input type="hidden" name="lectura_anterior" value="<?= esc((string) $lectura_anterior) ?>">
             </div>
 
             <div class="mb-3">
-                <label class="form-label">Lectura actual</label>
+                <label class="form-label">Lectura actual (m³)</label>
                 <input type="number" step="0.01" name="lectura_actual" class="form-control" required autofocus>
             </div>
 
