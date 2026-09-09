@@ -1,3 +1,10 @@
+<?php
+/** @var array $clientes */
+/** @var bool $mostrarInactivos */
+?>
+<?= $this->extend('layouts/main') ?>
+
+
 <?= $this->extend('layouts/main') ?>
 
 <?= $this->section('title') ?>Clientes<?= $this->endSection() ?>
