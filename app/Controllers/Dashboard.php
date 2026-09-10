@@ -49,7 +49,11 @@ class Dashboard extends BaseController
             })
             ->findAll();
 
-        $montoPendiente = array_sum(array_column($lecturasPendientes, 'monto'));
+        // OJO: 'monto' no existe en Lecturas. El monto real de cada lectura
+        // es 'monto_total' (columna calculada por la BD a partir de
+        // monto_base + monto_exceso). Sin este ajuste, el dashboard siempre
+        // mostraba $0.
+        $montoPendiente = array_sum(array_column($lecturasPendientes, 'monto_total'));
 
         $data = [
             'totalClientes' => $totalClientes,
