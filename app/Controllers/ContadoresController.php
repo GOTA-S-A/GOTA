@@ -158,4 +158,18 @@ class ContadoresController extends BaseController
 
         return redirect()->to('/contadores')->with('mensaje', 'Contador desactivado correctamente');
     }
+
+    // Reactiva un contador que había sido desactivado por error
+    public function activar($id)
+    {
+        $contador = $this->contadoresModel->find($id);
+
+        if (!$contador) {
+            return redirect()->to('/contadores')->with('error', 'Contador no encontrado');
+        }
+
+        $this->contadoresModel->update($id, ['activo' => 1]);
+
+        return redirect()->to('/contadores')->with('mensaje', 'Contador reactivado correctamente');
+    }
 }

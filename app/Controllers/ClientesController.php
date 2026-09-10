@@ -131,4 +131,20 @@ class ClientesController extends BaseController
 
         return redirect()->to('/clientes')->with('mensaje', 'Cliente desactivado correctamente');
     }
+
+    // Reactiva un cliente que había sido desactivado por error.
+    // Necesario porque desde el listado con ?mostrar=inactivos se puede
+    // ver un cliente inactivo, pero sin esto no había forma de revertirlo.
+    public function activar($id)
+    {
+        $cliente = $this->clientesModel->find($id);
+
+        if (!$cliente) {
+            return redirect()->to('/clientes')->with('error', 'Cliente no encontrado');
+        }
+
+        $this->clientesModel->update($id, ['activo' => 1]);
+
+        return redirect()->to('/clientes')->with('mensaje', 'Cliente reactivado correctamente');
+    }
 }
