@@ -4,9 +4,6 @@
 ?>
 <?= $this->extend('layouts/main') ?>
 
-
-<?= $this->extend('layouts/main') ?>
-
 <?= $this->section('title') ?>Clientes<?= $this->endSection() ?>
 
 <?= $this->section('styles') ?>
@@ -110,6 +107,11 @@
                                           onsubmit="return confirm('¿Desactivar este cliente?');">
                                         <?= csrf_field() ?>
                                         <button type="submit" class="btn btn-sm btn-outline-danger">Desactivar</button>
+                                    </form>
+                                <?php else: ?>
+                                    <form action="/clientes/activar/<?= $cliente['id'] ?>" method="post" class="d-inline">
+                                        <?= csrf_field() ?>
+                                        <button type="submit" class="btn btn-sm btn-outline-success">Activar</button>
                                     </form>
                                 <?php endif; ?>
                             </td>

@@ -77,6 +77,11 @@
                                         <?= csrf_field() ?>
                                         <button type="submit" class="btn btn-sm btn-outline-danger">Desactivar</button>
                                     </form>
+                                <?php else: ?>
+                                    <form action="/contadores/activar/<?= $contador['id'] ?>" method="post" class="d-inline">
+                                        <?= csrf_field() ?>
+                                        <button type="submit" class="btn btn-sm btn-outline-success">Activar</button>
+                                    </form>
                                 <?php endif; ?>
                             </td>
                         </tr>
