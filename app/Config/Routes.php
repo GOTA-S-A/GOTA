@@ -21,7 +21,6 @@ $routes->get('/clientes/editar/(:num)', 'ClientesController::editar/$1', ['filte
 $routes->post('/clientes/actualizar/(:num)', 'ClientesController::actualizar/$1', ['filter' => 'auth']);
 $routes->post('/clientes/desactivar/(:num)', 'ClientesController::desactivar/$1', ['filter' => 'auth']);
 $routes->post('/clientes/activar/(:num)', 'ClientesController::activar/$1', ['filter' => 'auth']);
-$routes->get('/', 'Home::index');
 
 // Rutas del modulo de Contadores
 $routes->get('/contadores', 'ContadoresController::index', ['filter' => 'auth']);
@@ -31,3 +30,19 @@ $routes->get('/contadores/editar/(:num)', 'ContadoresController::editar/$1', ['f
 $routes->post('/contadores/actualizar/(:num)', 'ContadoresController::actualizar/$1', ['filter' => 'auth']);
 $routes->post('/contadores/desactivar/(:num)', 'ContadoresController::desactivar/$1', ['filter' => 'auth']);
 $routes->post('/contadores/activar/(:num)', 'ContadoresController::activar/$1', ['filter' => 'auth']);
+
+// Rutas del modulo de Lecturas + Recibo
+$routes->get('/lecturas/nueva/(:num)', 'Lecturas::nueva/$1', ['filter' => 'auth']);
+$routes->post('/lecturas/guardar', 'Lecturas::guardar', ['filter' => 'auth']);
+$routes->get('/lecturas/recibo/(:num)', 'Lecturas::recibo/$1', ['filter' => 'auth']);
+
+// Rutas del modulo de Tipos de Servicio
+$routes->get('/tipos-servicio', 'TiposServicio::index', ['filter' => 'auth']);
+$routes->get('/tipos-servicio/nuevo', 'TiposServicio::nuevo', ['filter' => 'auth']);
+$routes->post('/tipos-servicio/crear', 'TiposServicio::crear', ['filter' => 'auth']);
+$routes->get('/tipos-servicio/editar/(:num)', 'TiposServicio::editar/$1', ['filter' => 'auth']);
+$routes->post('/tipos-servicio/actualizar/(:num)', 'TiposServicio::actualizar/$1', ['filter' => 'auth']);
+$routes->post('/tipos-servicio/desactivar/(:num)', 'TiposServicio::desactivar/$1', ['filter' => 'auth']);
+$routes->post('/tipos-servicio/activar/(:num)', 'TiposServicio::activar/$1', ['filter' => 'auth']);
+
+$routes->get('/', 'Home::index');
