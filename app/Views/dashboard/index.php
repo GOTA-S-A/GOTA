@@ -62,6 +62,7 @@
         font-size: 1.1rem;
         background: linear-gradient(135deg, #0d6efd, #0a58ca);
         -webkit-background-clip: text;
+        background-clip: text;
         -webkit-text-fill-color: transparent;
     }
 
@@ -213,16 +214,21 @@
     }
 
     .sidebar-menu li {
-        padding: 12px 20px;
-        cursor: pointer;
+        padding: 0;
         transition: all 0.2s ease;
+        border-left: 3px solid transparent;
+    }
+
+    .sidebar-menu li a {
+        padding: 12px 20px;
         display: flex;
         align-items: center;
         gap: 14px;
         color: rgba(255,255,255,0.65);
-        border-left: 3px solid transparent;
         font-size: 0.9rem;
         font-weight: 500;
+        text-decoration: none;
+        width: 100%;
     }
 
     .sidebar-menu li:active {
@@ -232,8 +238,12 @@
     .sidebar-menu li:hover,
     .sidebar-menu li.active {
         background: rgba(79, 195, 247, 0.08);
-        color: #fff;
         border-left-color: #4fc3f7;
+    }
+
+    .sidebar-menu li:hover a,
+    .sidebar-menu li.active a {
+        color: #fff;
     }
 
     .sidebar-menu li i {
@@ -816,35 +826,53 @@
     <ul class="sidebar-menu">
         <li class="menu-label">Menú Principal</li>
         <li class="active">
-            <i class="fas fa-th-large"></i>
-            <span>Dashboard</span>
+            <a href="<?= site_url('dashboard') ?>">
+                <i class="fas fa-th-large"></i>
+                <span>Dashboard</span>
+            </a>
         </li>
         <li>
-            <i class="fas fa-users"></i>
-            <span>Clientes</span>
-            <span class="badge-menu"><?= $totalClientes ?? 0 ?></span>
+            <a href="<?= site_url('clientes') ?>">
+                <i class="fas fa-users"></i>
+                <span>Clientes</span>
+                <span class="badge-menu"><?= $totalClientes ?? 0 ?></span>
+            </a>
         </li>
         <li>
-            <i class="fas fa-tachometer-alt"></i>
-            <span>Contadores</span>
-            <span class="badge-menu"><?= $totalContadores ?? 0 ?></span>
+            <a href="<?= site_url('contadores') ?>">
+                <i class="fas fa-tachometer-alt"></i>
+                <span>Contadores</span>
+                <span class="badge-menu"><?= $totalContadores ?? 0 ?></span>
+            </a>
         </li>
         <li>
-            <i class="fas fa-file-invoice"></i>
-            <span>Lecturas</span>
-            <span class="badge-menu"><?= $lecturasPendientes ?? 0 ?></span>
+            <a href="<?= site_url('pagos/pendientes') ?>">
+                <i class="fas fa-file-invoice"></i>
+                <span>Lecturas</span>
+                <span class="badge-menu"><?= $lecturasPendientes ?? 0 ?></span>
+            </a>
         </li>
         <li>
-            <i class="fas fa-coins"></i>
-            <span>Pagos</span>
+            <a href="<?= site_url('pagos') ?>">
+                <i class="fas fa-coins"></i>
+                <span>Pagos</span>
+            </a>
         </li>
         <li class="menu-label">Configuración</li>
         <li>
-            <i class="fas fa-cog"></i>
-            <span>Configuración</span>
+            <a href="<?= site_url('tarifas') ?>">
+                <i class="fas fa-tags"></i>
+                <span>Tarifas</span>
+            </a>
         </li>
         <li>
-            <a href="<?= base_url('logout') ?>" style="text-decoration: none; color: rgba(255,255,255,0.65); display: flex; align-items: center; gap: 14px; padding: 12px 20px; width: 100%; transition: all 0.2s ease;">
+            <a href="<?= site_url('tipos-servicio') ?>">
+                <i class="fas fa-cog"></i>
+                <span>Tipos de Servicio</span>
+            </a>
+        </li>
+        <li>
+            <a href="<?= base_url('logout') ?>">
                 <i class="fas fa-sign-out-alt"></i>
                 <span>Cerrar Sesión</span>
             </a>
@@ -865,9 +893,9 @@
                 <?= date('d/m/Y') ?> · <?= date('H:i') ?> hs
             </small>
         </div>
-        <button class="btn btn-primary btn-sm rounded-pill px-3" style="font-size: 0.75rem;">
+        <a href="<?= current_url() ?>" class="btn btn-primary btn-sm rounded-pill px-3" style="font-size: 0.75rem;">
             <i class="fas fa-sync-alt me-1"></i> Actualizar
-        </button>
+        </a>
     </div>
 
     <!-- ==========================================
@@ -966,9 +994,9 @@
                 <i class="fas fa-file-invoice me-2 text-primary"></i>
                 Lecturas Pendientes
             </h6>
-            <button class="btn btn-sm btn-outline-primary rounded-pill">
+            <a href="<?= site_url('pagos/pendientes') ?>" class="btn btn-sm btn-outline-primary rounded-pill">
                 <i class="fas fa-eye me-1"></i> Ver todas
-            </button>
+            </a>
         </div>
 
         <!-- ======================================
@@ -996,7 +1024,7 @@
                                 <div class="label">m³</div>
                             </div>
                             <div class="detail-item">
-                                <div class="value">$<?= number_format($lectura['monto'] ?? 0, 2) ?></div>
+                                <div class="value">$<?= number_format($lectura['monto_total'] ?? 0, 2) ?></div>
                                 <div class="label">Monto</div>
                             </div>
                             <div class="detail-item">
@@ -1006,12 +1034,12 @@
                         </div>
 
                         <div class="lectura-actions">
-                            <button class="btn btn-outline-primary btn-sm">
-                                <i class="fas fa-edit"></i> Editar
-                            </button>
-                            <button class="btn btn-success btn-sm">
+                            <a href="<?= site_url('lecturas/recibo/' . $lectura['id']) ?>" class="btn btn-outline-primary btn-sm">
+                                <i class="fas fa-receipt"></i> Ver recibo
+                            </a>
+                            <a href="<?= site_url('pagos/registrar/' . $lectura['id']) ?>" class="btn btn-success btn-sm">
                                 <i class="fas fa-check"></i> Pagar
-                            </button>
+                            </a>
                         </div>
                     </div>
                 <?php endforeach; ?>
@@ -1051,7 +1079,7 @@
                                 </td>
                                 <td><?= esc($lectura['contador_codigo'] ?? '') ?></td>
                                 <td><?= $lectura['consumo'] ?? 0 ?> m³</td>
-                                <td>$<?= number_format($lectura['monto'] ?? 0, 2) ?></td>
+                                <td>$<?= number_format($lectura['monto_total'] ?? 0, 2) ?></td>
                                 <td><?= date('M Y', strtotime($lectura['periodo'] ?? 'now')) ?></td>
                                 <td>
                                     <span class="badge-status <?= $lectura['estado'] ?? 'pendiente' ?>">
@@ -1059,12 +1087,12 @@
                                     </span>
                                 </td>
                                 <td>
-                                    <button class="btn btn-sm btn-outline-primary me-1" title="Editar">
-                                        <i class="fas fa-edit"></i>
-                                    </button>
-                                    <button class="btn btn-sm btn-success" title="Registrar Pago">
+                                    <a href="<?= site_url('lecturas/recibo/' . $lectura['id']) ?>" class="btn btn-sm btn-outline-primary me-1" title="Ver recibo">
+                                        <i class="fas fa-receipt"></i>
+                                    </a>
+                                    <a href="<?= site_url('pagos/registrar/' . $lectura['id']) ?>" class="btn btn-sm btn-success" title="Registrar Pago">
                                         <i class="fas fa-check"></i>
-                                    </button>
+                                    </a>
                                 </td>
                             </tr>
                         <?php endforeach; ?>
@@ -1108,29 +1136,22 @@
    BOTTOM NAV (Mobile)
    ============================================ -->
 <nav class="bottom-nav">
-    <button class="nav-item active">
+    <a href="<?= site_url('dashboard') ?>" class="nav-item active">
         <i class="fas fa-th-large"></i>
         <span>Dashboard</span>
-    </button>
-    <button class="nav-item">
+    </a>
+    <a href="<?= site_url('clientes') ?>" class="nav-item">
         <i class="fas fa-users"></i>
         <span>Clientes</span>
-    </button>
-    <button class="nav-item">
+    </a>
+    <a href="<?= site_url('pagos/pendientes') ?>" class="nav-item">
         <i class="fas fa-file-invoice"></i>
         <span>Lecturas</span>
-    </button>
-    <button class="nav-item">
+    </a>
+    <a href="<?= site_url('pagos') ?>" class="nav-item">
         <i class="fas fa-coins"></i>
         <span>Pagos</span>
-    </button>
-    <button class="nav-item">
-        <div class="nav-item-wrapper">
-            <i class="fas fa-bell"></i>
-            <span class="nav-badge">3</span>
-        </div>
-        <span>Alertas</span>
-    </button>
+    </a>
 </nav>
 
 <script>
@@ -1149,24 +1170,6 @@
         menuToggle?.addEventListener('click', toggleSidebar);
         closeSidebar?.addEventListener('click', toggleSidebar);
         overlay?.addEventListener('click', toggleSidebar);
-
-        // Cerrar sidebar al hacer clic en un enlace (mobile)
-        document.querySelectorAll('.sidebar-menu li').forEach(item => {
-            item.addEventListener('click', function() {
-                if (window.innerWidth < 768) {
-                    toggleSidebar();
-                }
-            });
-        });
-
-        // Cerrar sidebar al redimensionar a desktop
-        window.addEventListener('resize', function() {
-            if (window.innerWidth >= 768 && sidebar.classList.contains('open')) {
-                sidebar.classList.remove('open');
-                overlay.classList.remove('active');
-                document.body.style.overflow = '';
-            }
-        });
     });
 </script>
 
