@@ -1,4 +1,3 @@
-
 <?php
 /** @var array|null $cliente */
 ?>
@@ -31,25 +30,25 @@
                 <div class="mb-3">
                     <label class="form-label" for="nombre">Nombre *</label>
                     <input id="nombre" type="text" name="nombre" class="form-control" maxlength="100"
-                           value="<?= esc($cliente['nombre'] ?? old('nombre')) ?>" required>
+                           value="<?= esc(old('nombre', $cliente['nombre'] ?? '')) ?>" required>
                 </div>
 
                 <div class="mb-3">
                     <label class="form-label" for="telefono">Teléfono</label>
                     <input id="telefono" type="text" name="telefono" class="form-control" maxlength="20"
-                           value="<?= esc($cliente['telefono'] ?? old('telefono')) ?>">
+                           value="<?= esc(old('telefono', $cliente['telefono'] ?? '')) ?>">
                 </div>
 
                 <div class="mb-3">
                     <label class="form-label" for="direccion">Dirección *</label>
                     <input id="direccion" type="text" name="direccion" class="form-control" maxlength="200"
-                           value="<?= esc($cliente['direccion'] ?? old('direccion')) ?>" required>
+                           value="<?= esc(old('direccion', $cliente['direccion'] ?? '')) ?>" required>
                 </div>
 
                 <div class="mb-4">
                     <label class="form-label" for="email">Email</label>
                     <input id="email" type="email" name="email" class="form-control" maxlength="100"
-                           value="<?= esc($cliente['email'] ?? old('email')) ?>">
+                           value="<?= esc(old('email', $cliente['email'] ?? '')) ?>">
                 </div>
 
                 <div class="d-flex gap-2">
