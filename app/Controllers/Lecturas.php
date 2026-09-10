@@ -21,6 +21,10 @@ class Lecturas extends BaseController
         $this->tarifaModel   = new TarifasModel();
     }
 
+    /**
+     * Muestra el formulario para registrar una nueva lectura de un contador.
+     * Ruta esperada: GET /lecturas/nueva/{contador_id}
+     */
     public function nueva(int $contadorId)
     {
         $ultimaLectura   = $this->lecturaModel->obtenerUltimaLectura($contadorId);
@@ -41,24 +45,36 @@ class Lecturas extends BaseController
         ]);
     }
 
+    /**
+     * Procesa el formulario: recalcula la lectura anterior desde la BD,
+     * busca la tarifa vigente para el tipo de servicio del contador,
+     * calcula el desglose base/exceso, y guarda el registro.
+     *
+     * Ruta esperada: POST /lecturas/guardar
+     */
     public function guardar()
     {
         $contadorId       = (int) $this->request->getPost('contador_id');
         $lecturaActualRaw = $this->request->getPost('lectura_actual');
-        $fecha            = date('Y-m-d H:i:s');
+        $fecha            = date('Y-m-d H:i:s'); // fecha_lectura es DATETIME en la BD real
 
+        // --- Validación: lectura_actual debe venir y no estar vacía ---
         if ($lecturaActualRaw === null || trim((string) $lecturaActualRaw) === '') {
             return redirect()->back()->withInput()
                 ->with('error', 'Debes ingresar la lectura actual.');
         }
         $lecturaActual = (float) $lecturaActualRaw;
 
+        // --- El contador debe existir: de ahí sacamos su tipo_servicio_id ---
         $contador = $this->contadorModel->find($contadorId);
         if (! $contador) {
             return redirect()->back()->withInput()
                 ->with('error', 'El contador indicado no existe.');
         }
 
+        // --- Recalculamos la lectura anterior del lado del servidor ---
+        // NUNCA confiar en un valor de lectura_anterior que venga del formulario:
+        // alguien podría manipularlo desde el navegador antes de enviar.
         $ultimaLectura   = $this->lecturaModel->obtenerUltimaLectura($contadorId);
         $lecturaAnterior = $ultimaLectura['lectura_actual'] ?? 0;
 
@@ -69,12 +85,14 @@ class Lecturas extends BaseController
 
         $consumo = $lecturaActual - $lecturaAnterior;
 
+        // --- Tarifa vigente para el tipo de servicio de este contador ---
         $tarifa = $this->resolverTarifa((int) $contador['tipo_servicio_id'], $fecha);
         if (! $tarifa) {
             return redirect()->back()->withInput()
                 ->with('error', 'No hay una tarifa vigente para el tipo de servicio de este contador.');
         }
 
+        // --- Cálculo escalonado: parte dentro del volumen incluido + parte de exceso ---
         $volumenIncluido = (float) $tarifa['volumen_incluido_m3'];
         $consumoBase     = min($consumo, $volumenIncluido);
         $consumoExceso   = max($consumo - $volumenIncluido, 0);
@@ -89,6 +107,10 @@ class Lecturas extends BaseController
             'contador_id'         => $contadorId,
             'lectura_anterior'    => $lecturaAnterior,
             'lectura_actual'      => $lecturaActual,
+            // OJO: 'consumo' y 'monto_total' NO se incluyen aquí.
+            // Son columnas STORED GENERATED en MySQL: la propia base
+            // de datos las calcula sola, e insertarlas manualmente
+            // causa un error de SQL.
             'tarifa_id'           => $tarifa['id'],
             'volumen_base_m3'     => $volumenIncluido,
             'consumo_base_m3'     => $consumoBase,
@@ -99,7 +121,7 @@ class Lecturas extends BaseController
             'monto_exceso'        => $montoExceso,
             'fecha_lectura'       => $fecha,
             'usuario_lector_id'   => $usuarioLectorId,
-            'periodo'             => date('Y-m-01'),
+            'periodo'             => date('Y-m-01'), // columna DATE: primer día del mes
         ];
 
         $lecturaId = $this->lecturaModel->insert($data);
@@ -114,12 +136,13 @@ class Lecturas extends BaseController
 
     /**
      * Muestra el recibo imprimible de una lectura ya registrada.
-     * Además de la lectura en sí, trae los datos del cliente y del
-     * contador (el recibo debe mostrar a quién se le está cobrando,
-     * no solo el monto).
+     * Ruta esperada: GET /lecturas/recibo/{id}
      */
     public function recibo(int $id)
     {
+        // Volvemos a leer de la BD (no reusamos el $data de guardar()),
+        // porque solo así obtenemos 'consumo' y 'monto_total' ya
+        // calculados por MySQL.
         $lectura = $this->lecturaModel->find($id);
 
         if (! $lectura) {
@@ -142,20 +165,23 @@ class Lecturas extends BaseController
         ]);
     }
 
+    /**
+     * Busca la tarifa vigente para un tipo de servicio, a una fecha dada.
+     *
+     * Ya no es temporal: TarifasModel::obtenerTarifaVigente() es el método
+     * real, construido por el equipo de Tarifas siguiendo el mismo
+     * contrato (firma y comportamiento) que usábamos aquí de forma
+     * provisional mientras ese módulo no existía.
+     */
     private function resolverTarifa(int $tipoServicioId, string $fecha): ?array
     {
-        return $this->tarifaModel
-            ->where('tipo_servicio_id', $tipoServicioId)
-            ->where('activo', 1)
-            ->where('vigente_desde <=', $fecha)
-            ->groupStart()
-                ->where('vigente_hasta >=', $fecha)
-                ->orWhere('vigente_hasta IS NULL', null, false)
-            ->groupEnd()
-            ->orderBy('vigente_desde', 'DESC')
-            ->first();
+        return $this->tarifaModel->obtenerTarifaVigente($tipoServicioId, $fecha);
     }
 
+    /**
+     * Resuelve el usuario (Lector) que registra la lectura, desde la
+     * sesión real de Auth (ya confirmado: la clave es 'usuario_id').
+     */
     private function resolverUsuarioLector(): int
     {
         return (int) session()->get('usuario_id');
