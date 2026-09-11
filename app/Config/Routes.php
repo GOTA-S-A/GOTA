@@ -13,6 +13,15 @@ $routes->post('/logout', 'Auth::logout');
 // Dashboard route with authentication filter
 $routes->get('/dashboard', 'Dashboard::index', ['filter' => 'auth']);
 
+// Administración de usuarios y roles
+$routes->group('usuarios', ['filter' => 'auth'], function ($routes) {
+    $routes->get('/', 'UsuariosController::index');
+    $routes->get('nuevo', 'UsuariosController::nuevo');
+    $routes->post('crear', 'UsuariosController::crear');
+    $routes->get('editar/(:num)', 'UsuariosController::editar/$1');
+    $routes->post('actualizar/(:num)', 'UsuariosController::actualizar/$1');
+});
+
 // Rutas del modulo de Clientes
 $routes->get('/clientes', 'ClientesController::index', ['filter' => 'auth']);
 $routes->get('/clientes/nuevo', 'ClientesController::nuevo', ['filter' => 'auth']);

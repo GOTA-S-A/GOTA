@@ -63,18 +63,19 @@ class Dashboard extends BaseController
             'lecturasPendientes' => count($lecturasPendientes),
             'montoPendiente' => $montoPendiente,
             'lecturas' => $lecturasPendientes,
-            // Datos de ejemplo para analíticas (adaptar según necesidades)
-            'tasaEntrega' => 100,
-            'tasaApertura' => 23,
-            'reenvios' => 16,
-            'reportesAbuso' => 2,
+            // Estas métricas aún no tienen una fuente en el esquema actual.
+            // Se muestran en cero hasta que exista su módulo o sus columnas.
+            'tasaEntrega' => 0,
+            'tasaApertura' => 0,
+            'reenvios' => 0,
+            'reportesAbuso' => 0,
             'clientesNuevos' => $clientesModel->where('activo', 1)->where('MONTH(fecha_registro)', date('m'))->countAllResults(),
             'pagosMes' => $pagosModel->where('MONTH(fecha_pago)', date('m'))->where('YEAR(fecha_pago)', date('Y'))->where('estado', 'Completado')->countAllResults(),
             'lecturasMes' => $lecturasModel->where('MONTH(fecha_lectura)', date('m'))->where('YEAR(fecha_lectura)', date('Y'))->countAllResults(),
-            'clientesPorcentaje' => 12, // Calcular con datos reales
-            'consumoPorcentaje' => 8,
-            'ingresosPorcentaje' => 5,
-            'pendientesPorcentaje' => 3,
+            'clientesPorcentaje' => 0,
+            'consumoPorcentaje' => 0,
+            'ingresosPorcentaje' => 0,
+            'pendientesPorcentaje' => 0,
             'inicio' => 1,
             'fin' => min(5, count($lecturasPendientes)),
             'totalRegistros' => count($lecturasPendientes),

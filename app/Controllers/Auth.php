@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Models\UsuarioModel;
+use App\Models\RolesModel;
 
 class Auth extends BaseController
 {
@@ -23,11 +24,14 @@ class Auth extends BaseController
             return redirect()->back()->with('error', 'Correo o contraseña incorrectos');
         }
 
+        $rol = (new RolesModel())->find($usuario['rol_id']);
+
         // Guardamos los datos importantes en la sesión
         session()->set([
             'usuario_id'     => $usuario['id'],
             'usuario_nombre' => $usuario['nombre'],
             'rol_id'         => $usuario['rol_id'],
+            'rol_nombre'     => $rol['nombre'] ?? null,
             'isLoggedIn'     => true,
         ]);
 
