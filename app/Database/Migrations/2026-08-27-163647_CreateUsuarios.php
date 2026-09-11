@@ -17,12 +17,12 @@ class CreateUsuarios extends Migration
             'created_at'    => ['type' => 'DATETIME', 'null' => true],
         ]);
         $this->forge->addKey('id', true);
-        $this->forge->addForeignKey('rol_id', 'roles', 'id', 'CASCADE', 'RESTRICT');
-        $this->forge->createTable('usuarios');
+        $this->forge->addForeignKey('rol_id', 'Roles', 'id', 'CASCADE', 'RESTRICT');
+        $this->forge->createTable('Usuarios');
     }
 
     public function down()
     {
-        $this->forge->dropTable('usuarios');
+        $this->forge->dropTable('Usuarios');
     }
 }

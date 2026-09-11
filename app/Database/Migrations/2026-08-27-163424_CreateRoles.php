@@ -13,11 +13,11 @@ class CreateRoles extends Migration
             'nombre' => ['type' => 'VARCHAR', 'constraint' => 50], // Administrador, Secretaria, Lector
         ]);
         $this->forge->addKey('id', true);
-        $this->forge->createTable('roles');
+        $this->forge->createTable('Roles');
     }
 
     public function down()
     {
-        $this->forge->dropTable('roles');
+        $this->forge->dropTable('Roles');
     }
 }
