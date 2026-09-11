@@ -229,6 +229,7 @@
                 <a class="<?= $activeSection === 'pagos' && ! str_contains($currentPath, 'pendientes') ? 'active' : '' ?>" href="<?= site_url('pagos') ?>"><i class="fas fa-money-bill-wave"></i>Pagos</a>
                 <?php if ($currentPath !== 'dashboard'): ?>
                     <a class="<?= $activeSection === 'tarifas' ? 'active' : '' ?>" href="<?= site_url('tarifas') ?>"><i class="fas fa-tags"></i>Tarifas</a>
+                    <a class="<?= $activeSection === 'tipos-servicio' ? 'active' : '' ?>" href="<?= site_url('tipos-servicio') ?>"><i class="fas fa-cog"></i>Tipos de Servicio</a>
                 <?php endif; ?>
                 <?php if ((int) session()->get('rol_id') === 1): ?>
                     <a class="<?= $activeSection === 'usuarios' ? 'active' : '' ?>" href="<?= site_url('usuarios') ?>"><i class="fas fa-user-shield"></i>Usuarios</a>

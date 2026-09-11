@@ -807,12 +807,12 @@
                     <i class="fas fa-users"></i>
                 </div>
                 <span class="stat-change up">
-                    <i class="fas fa-arrow-up"></i> <?= $clientesPorcentaje ?? 12 ?>%
+                    <i class="fas fa-arrow-up"></i> <?= $clientesPorcentaje ?? 0 ?>%
                 </span>
             </div>
-            <p class="stat-number"><?= number_format($totalClientes ?? 1276) ?></p>
+            <p class="stat-number"><?= number_format($totalClientes ?? 0) ?></p>
             <p class="stat-label">Clientes Activos</p>
-            <p class="stat-sub">+<?= $clientesNuevos ?? 24 ?> este mes</p>
+            <p class="stat-sub">+<?= $clientesNuevos ?? 0 ?> este mes</p>
         </div>
 
         <!-- Consumo -->
@@ -822,12 +822,12 @@
                     <i class="fas fa-water"></i>
                 </div>
                 <span class="stat-change up">
-                    <i class="fas fa-arrow-up"></i> <?= $consumoPorcentaje ?? 8 ?>%
+                    <i class="fas fa-arrow-up"></i> <?= $consumoPorcentaje ?? 0 ?>%
                 </span>
             </div>
-            <p class="stat-number"><?= number_format($consumoTotal ?? 2450) ?></p>
+            <p class="stat-number"><?= number_format($consumoTotal ?? 0) ?></p>
             <p class="stat-label">m³ Consumidos</p>
-            <p class="stat-sub"><?= $lecturasMes ?? 342 ?> lecturas este mes</p>
+            <p class="stat-sub"><?= $lecturasMes ?? 0 ?> lecturas este mes</p>
         </div>
 
         <!-- Ingresos -->
@@ -837,12 +837,12 @@
                     <i class="fas fa-coin"></i>
                 </div>
                 <span class="stat-change up">
-                    <i class="fas fa-arrow-up"></i> <?= $ingresosPorcentaje ?? 5 ?>%
+                    <i class="fas fa-arrow-up"></i> <?= $ingresosPorcentaje ?? 0 ?>%
                 </span>
             </div>
-            <p class="stat-number">Q<?= number_format($ingresosMes ?? 6875, 0, ',', '.') ?></p>
+            <p class="stat-number">Q<?= number_format($ingresosMes ?? 0, 0, ',', '.') ?></p>
             <p class="stat-label">Ingresos del Mes</p>
-            <p class="stat-sub"><?= $pagosMes ?? 156 ?> pagos realizados</p>
+            <p class="stat-sub"><?= $pagosMes ?? 0 ?> pagos realizados</p>
         </div>
 
         <!-- Pendientes -->
@@ -852,12 +852,12 @@
                     <i class="fas fa-exclamation-triangle"></i>
                 </div>
                 <span class="stat-change down">
-                    <i class="fas fa-arrow-down"></i> <?= $pendientesPorcentaje ?? 3 ?>%
+                    <i class="fas fa-arrow-down"></i> <?= $pendientesPorcentaje ?? 0 ?>%
                 </span>
             </div>
-            <p class="stat-number"><?= $lecturasPendientes ?? 24 ?></p>
+            <p class="stat-number"><?= $lecturasPendientes ?? 0 ?></p>
             <p class="stat-label">Pagos Pendientes</p>
-            <p class="stat-sub">Q<?= number_format($montoPendiente ?? 12450, 0, ',', '.') ?> por cobrar</p>
+            <p class="stat-sub">Q<?= number_format($montoPendiente ?? 0, 0, ',', '.') ?> por cobrar</p>
         </div>
     </div>
 
@@ -866,19 +866,19 @@
     ========================================== -->
     <div class="analytics-grid">
         <div class="analytics-card">
-            <p class="analytics-number text-success"><?= $tasaEntrega ?? 100 ?>%</p>
+            <p class="analytics-number text-success"><?= $tasaEntrega ?? 0 ?>%</p>
             <p class="analytics-label">Entregas Exitosas</p>
         </div>
         <div class="analytics-card">
-            <p class="analytics-number text-primary"><?= $tasaApertura ?? 23 ?>%</p>
+            <p class="analytics-number text-primary"><?= $tasaApertura ?? 0 ?>%</p>
             <p class="analytics-label">Apertura Única</p>
         </div>
         <div class="analytics-card">
-            <p class="analytics-number text-info"><?= $reenvios ?? 16 ?></p>
+            <p class="analytics-number text-info"><?= $reenvios ?? 0 ?></p>
             <p class="analytics-label">Reenviados</p>
         </div>
         <div class="analytics-card">
-            <p class="analytics-number text-danger"><?= $reportesAbuso ?? 2 ?></p>
+            <p class="analytics-number text-danger"><?= $reportesAbuso ?? 0 ?></p>
             <p class="analytics-label">Reportes de Abuso</p>
         </div>
     </div>
