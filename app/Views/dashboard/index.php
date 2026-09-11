@@ -858,19 +858,6 @@
                 <span>Pagos</span>
             </a>
         </li>
-        <li class="menu-label">Configuración</li>
-        <li>
-            <a href="<?= site_url('tarifas') ?>">
-                <i class="fas fa-tags"></i>
-                <span>Tarifas</span>
-            </a>
-        </li>
-        <li>
-            <a href="<?= site_url('tipos-servicio') ?>">
-                <i class="fas fa-cog"></i>
-                <span>Tipos de Servicio</span>
-            </a>
-        </li>
         <li>
             <a href="<?= base_url('logout') ?>">
                 <i class="fas fa-sign-out-alt"></i>
