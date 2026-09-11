@@ -14,9 +14,255 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     
     <?= $this->renderSection('styles') ?>
+    <style>
+        :root {
+            --app-primary: #0d6efd;
+            --app-primary-dark: #0a58ca;
+            --app-sidebar-width: 280px;
+        }
+
+        body {
+            background: #f5f7fb;
+            min-height: 100vh;
+            padding-bottom: 72px;
+        }
+
+        .app-header {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 16px;
+            background: #fff;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+        }
+
+        .app-header .brand,
+        .app-header .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .app-header .brand h5 {
+            margin: 0;
+            color: var(--app-primary);
+            font-weight: 800;
+        }
+
+        .app-header .brand small {
+            display: block;
+            color: #6c757d;
+            font-size: 0.65rem;
+        }
+
+        .menu-toggle,
+        .close-sidebar {
+            border: 0;
+            background: transparent;
+        }
+
+        .menu-toggle {
+            color: #1a1a2e;
+            font-size: 1.4rem;
+        }
+
+        .user-avatar {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--app-primary), var(--app-primary-dark));
+            color: #fff;
+            font-weight: 700;
+        }
+
+        .shared-sidebar-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            z-index: 2000;
+            background: rgba(0, 0, 0, 0.5);
+        }
+
+        .shared-sidebar-overlay.active { display: block; }
+
+        .shared-sidebar {
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            z-index: 3000;
+            width: var(--app-sidebar-width);
+            overflow-y: auto;
+            background: #1a1a2e;
+            color: #fff;
+            transform: translateX(-100%);
+            transition: transform 0.25s ease;
+        }
+
+        .shared-sidebar.open { transform: translateX(0); }
+
+        .shared-sidebar-brand {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 24px 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .shared-sidebar-brand strong { color: #4fc3f7; }
+        .shared-sidebar-brand .close-sidebar { color: rgba(255, 255, 255, 0.7); font-size: 1.4rem; }
+        .shared-sidebar-menu { list-style: none; padding: 12px 0; margin: 0; }
+        .shared-sidebar-menu .menu-label {
+            padding: 12px 20px 6px;
+            color: rgba(255, 255, 255, 0.35);
+            font-size: 0.65rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .shared-sidebar-menu a {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 12px 20px;
+            border-left: 3px solid transparent;
+            color: rgba(255, 255, 255, 0.65);
+            font-size: 0.9rem;
+            text-decoration: none;
+        }
+
+        .shared-sidebar-menu a:hover,
+        .shared-sidebar-menu a.active {
+            border-left-color: #4fc3f7;
+            background: rgba(79, 195, 247, 0.08);
+            color: #fff;
+        }
+
+        .shared-sidebar-menu i { width: 22px; text-align: center; }
+
+        .shared-main-content { padding: 16px; }
+
+        .shared-bottom-nav {
+            position: fixed;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            z-index: 1000;
+            display: flex;
+            justify-content: space-around;
+            padding: 8px 0;
+            border-top: 1px solid rgba(0, 0, 0, 0.05);
+            background: #fff;
+            box-shadow: 0 -2px 12px rgba(0, 0, 0, 0.06);
+        }
+
+        .shared-bottom-nav a {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2px;
+            color: #6c757d;
+            font-size: 0.6rem;
+            text-decoration: none;
+        }
+
+        .shared-bottom-nav a.active { color: var(--app-primary); }
+        .shared-bottom-nav i { font-size: 1.15rem; }
+
+        @media (min-width: 768px) {
+            body { padding-bottom: 0; }
+            .app-header { padding: 16px 32px; }
+            .menu-toggle { display: none; }
+            .shared-sidebar { transform: translateX(0); }
+            .shared-sidebar-overlay,
+            .shared-bottom-nav { display: none; }
+            .shared-main-content { margin-left: var(--app-sidebar-width); padding: 32px; }
+        }
+    </style>
 </head>
 <body>
-    <?= $this->renderSection('content') ?>
+    <?php
+        $currentPath = trim(uri_string(), '/');
+        $sharedShellExcluded = $currentPath === 'dashboard' || str_starts_with($currentPath, 'lecturas/');
+    ?>
+
+    <?php if (! $sharedShellExcluded && session()->get('isLoggedIn')): ?>
+        <?php $activeSection = explode('/', $currentPath)[0] ?: 'dashboard'; ?>
+        <header class="app-header">
+            <div class="brand">
+                <button class="menu-toggle" id="sharedMenuToggle" aria-label="Abrir menú">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <div>
+                    <h5>GOTA</h5>
+                    <small>Sistema de Agua</small>
+                </div>
+            </div>
+            <div class="header-actions">
+                <div class="user-avatar">
+                    <?= strtoupper(substr(session()->get('nombre') ?? 'Admin', 0, 2)) ?>
+                </div>
+            </div>
+        </header>
+
+        <div class="shared-sidebar-overlay" id="sharedSidebarOverlay"></div>
+        <aside class="shared-sidebar" id="sharedSidebar">
+            <div class="shared-sidebar-brand">
+                <h4 class="mb-0"><strong>GOTA</strong>·agua</h4>
+                <button class="close-sidebar" id="sharedCloseSidebar" aria-label="Cerrar menú">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <nav class="shared-sidebar-menu">
+                <div class="menu-label">Menú Principal</div>
+                <a class="<?= $activeSection === 'dashboard' ? 'active' : '' ?>" href="<?= site_url('dashboard') ?>"><i class="fas fa-th-large"></i>Dashboard</a>
+                <a class="<?= $activeSection === 'clientes' ? 'active' : '' ?>" href="<?= site_url('clientes') ?>"><i class="fas fa-users"></i>Clientes</a>
+                <a class="<?= $activeSection === 'contadores' ? 'active' : '' ?>" href="<?= site_url('contadores') ?>"><i class="fas fa-gauge-high"></i>Contadores</a>
+                <a class="<?= $activeSection === 'pagos' && str_contains($currentPath, 'pendientes') ? 'active' : '' ?>" href="<?= site_url('pagos/pendientes') ?>"><i class="fas fa-file-invoice"></i>Lecturas</a>
+                <a class="<?= $activeSection === 'pagos' && ! str_contains($currentPath, 'pendientes') ? 'active' : '' ?>" href="<?= site_url('pagos') ?>"><i class="fas fa-money-bill-wave"></i>Pagos</a>
+                <a class="<?= $activeSection === 'tarifas' ? 'active' : '' ?>" href="<?= site_url('tarifas') ?>"><i class="fas fa-tags"></i>Tarifas</a>
+                <div class="menu-label">Sesión</div>
+                <a href="<?= site_url('logout') ?>"><i class="fas fa-sign-out-alt"></i>Cerrar sesión</a>
+            </nav>
+        </aside>
+
+        <main class="shared-main-content">
+            <?= $this->renderSection('content') ?>
+        </main>
+
+        <nav class="shared-bottom-nav">
+            <a class="<?= $activeSection === 'dashboard' ? 'active' : '' ?>" href="<?= site_url('dashboard') ?>"><i class="fas fa-th-large"></i>Inicio</a>
+            <a class="<?= $activeSection === 'clientes' ? 'active' : '' ?>" href="<?= site_url('clientes') ?>"><i class="fas fa-users"></i>Clientes</a>
+            <a class="<?= $activeSection === 'contadores' ? 'active' : '' ?>" href="<?= site_url('contadores') ?>"><i class="fas fa-gauge-high"></i>Contadores</a>
+            <a class="<?= $activeSection === 'pagos' ? 'active' : '' ?>" href="<?= site_url('pagos') ?>"><i class="fas fa-money-bill-wave"></i>Pagos</a>
+        </nav>
+
+        <script>
+            const sharedMenuToggle = document.getElementById('sharedMenuToggle');
+            const sharedSidebar = document.getElementById('sharedSidebar');
+            const sharedSidebarOverlay = document.getElementById('sharedSidebarOverlay');
+            const sharedCloseSidebar = document.getElementById('sharedCloseSidebar');
+            const closeSharedSidebar = () => {
+                sharedSidebar.classList.remove('open');
+                sharedSidebarOverlay.classList.remove('active');
+            };
+            sharedMenuToggle?.addEventListener('click', () => {
+                sharedSidebar.classList.add('open');
+                sharedSidebarOverlay.classList.add('active');
+            });
+            sharedCloseSidebar?.addEventListener('click', closeSharedSidebar);
+            sharedSidebarOverlay?.addEventListener('click', closeSharedSidebar);
+        </script>
+    <?php else: ?>
+        <?= $this->renderSection('content') ?>
+    <?php endif; ?>
     
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <?= $this->renderSection('scripts') ?>

@@ -204,16 +204,12 @@
     </div>
     <ul class="sidebar-menu">
         <li class="menu-label">Menú Principal</li>
-        <li>
-            <a href="<?= site_url('dashboard') ?>" style="color: inherit; text-decoration: none; display: flex; align-items: center; gap: 14px; width: 100%;">
-                <i class="fas fa-th-large"></i>
-                <span>Dashboard</span>
-            </a>
-        </li>
-        <li class="active">
-            <i class="fas fa-file-invoice"></i>
-            <span>Lecturas</span>
-        </li>
+        <li><a href="<?= site_url('dashboard') ?>" style="color: inherit; text-decoration: none; display: flex; align-items: center; gap: 14px; width: 100%;"><i class="fas fa-th-large"></i><span>Dashboard</span></a></li>
+        <li><a href="<?= site_url('clientes') ?>" style="color: inherit; text-decoration: none; display: flex; align-items: center; gap: 14px; width: 100%;"><i class="fas fa-users"></i><span>Clientes</span></a></li>
+        <li><a href="<?= site_url('contadores') ?>" style="color: inherit; text-decoration: none; display: flex; align-items: center; gap: 14px; width: 100%;"><i class="fas fa-gauge-high"></i><span>Contadores</span></a></li>
+        <li class="active"><a href="<?= site_url('pagos/pendientes') ?>" style="color: inherit; text-decoration: none; display: flex; align-items: center; gap: 14px; width: 100%;"><i class="fas fa-file-invoice"></i><span>Lecturas</span></a></li>
+        <li><a href="<?= site_url('pagos') ?>" style="color: inherit; text-decoration: none; display: flex; align-items: center; gap: 14px; width: 100%;"><i class="fas fa-money-bill-wave"></i><span>Pagos</span></a></li>
+        <li><a href="<?= site_url('tarifas') ?>" style="color: inherit; text-decoration: none; display: flex; align-items: center; gap: 14px; width: 100%;"><i class="fas fa-tags"></i><span>Tarifas</span></a></li>
         <li class="menu-label">Sesión</li>
         <li>
             <a href="<?= site_url('logout') ?>" style="color: inherit; text-decoration: none; display: flex; align-items: center; gap: 14px; width: 100%;">

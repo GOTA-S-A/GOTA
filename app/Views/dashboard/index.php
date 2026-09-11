@@ -942,7 +942,7 @@
                     <i class="fas fa-arrow-up"></i> <?= $ingresosPorcentaje ?? 5 ?>%
                 </span>
             </div>
-            <p class="stat-number">$<?= number_format($ingresosMes ?? 6875, 0, ',', '.') ?></p>
+            <p class="stat-number">Q<?= number_format($ingresosMes ?? 6875, 0, ',', '.') ?></p>
             <p class="stat-label">Ingresos del Mes</p>
             <p class="stat-sub"><?= $pagosMes ?? 156 ?> pagos realizados</p>
         </div>
@@ -959,7 +959,7 @@
             </div>
             <p class="stat-number"><?= $lecturasPendientes ?? 24 ?></p>
             <p class="stat-label">Pagos Pendientes</p>
-            <p class="stat-sub">$<?= number_format($montoPendiente ?? 12450, 0, ',', '.') ?> por cobrar</p>
+            <p class="stat-sub">Q<?= number_format($montoPendiente ?? 12450, 0, ',', '.') ?> por cobrar</p>
         </div>
     </div>
 
@@ -1024,7 +1024,7 @@
                                 <div class="label">m³</div>
                             </div>
                             <div class="detail-item">
-                                <div class="value">$<?= number_format($lectura['monto_total'] ?? 0, 2) ?></div>
+                                <div class="value">Q<?= number_format($lectura['monto_total'] ?? 0, 2) ?></div>
                                 <div class="label">Monto</div>
                             </div>
                             <div class="detail-item">
@@ -1079,7 +1079,7 @@
                                 </td>
                                 <td><?= esc($lectura['contador_codigo'] ?? '') ?></td>
                                 <td><?= $lectura['consumo'] ?? 0 ?> m³</td>
-                                <td>$<?= number_format($lectura['monto_total'] ?? 0, 2) ?></td>
+                                <td>Q<?= number_format($lectura['monto_total'] ?? 0, 2) ?></td>
                                 <td><?= date('M Y', strtotime($lectura['periodo'] ?? 'now')) ?></td>
                                 <td>
                                     <span class="badge-status <?= $lectura['estado'] ?? 'pendiente' ?>">
