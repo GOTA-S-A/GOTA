@@ -63,8 +63,9 @@
         <?php endif; ?>
     </div>
 
-    <div class="card shadow-sm">
-        <div class="card-body p-0">
+    <div class="table-responsive">
+        <div class="card shadow-sm">
+            <div class="card-body p-0">
             <table class="table table-hover table-clientes mb-0">
                 <thead>
                     <tr>
@@ -119,6 +120,7 @@
                     <?php endforeach; ?>
                 </tbody>
             </table>
+            </div>
         </div>
     </div>
 

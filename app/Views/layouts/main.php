@@ -190,7 +190,7 @@
 <body>
     <?php
         $currentPath = trim(uri_string(), '/');
-        $sharedShellExcluded = $currentPath === 'dashboard' || str_starts_with($currentPath, 'lecturas/');
+        $sharedShellExcluded = str_starts_with($currentPath, 'lecturas/');
     ?>
 
     <?php if (! $sharedShellExcluded && session()->get('isLoggedIn')): ?>
@@ -227,7 +227,9 @@
                 <a class="<?= $activeSection === 'contadores' ? 'active' : '' ?>" href="<?= site_url('contadores') ?>"><i class="fas fa-gauge-high"></i>Contadores</a>
                 <a class="<?= $activeSection === 'pagos' && str_contains($currentPath, 'pendientes') ? 'active' : '' ?>" href="<?= site_url('pagos/pendientes') ?>"><i class="fas fa-file-invoice"></i>Lecturas</a>
                 <a class="<?= $activeSection === 'pagos' && ! str_contains($currentPath, 'pendientes') ? 'active' : '' ?>" href="<?= site_url('pagos') ?>"><i class="fas fa-money-bill-wave"></i>Pagos</a>
-                <a class="<?= $activeSection === 'tarifas' ? 'active' : '' ?>" href="<?= site_url('tarifas') ?>"><i class="fas fa-tags"></i>Tarifas</a>
+                <?php if ($currentPath !== 'dashboard'): ?>
+                    <a class="<?= $activeSection === 'tarifas' ? 'active' : '' ?>" href="<?= site_url('tarifas') ?>"><i class="fas fa-tags"></i>Tarifas</a>
+                <?php endif; ?>
                 <div class="menu-label">Sesión</div>
                 <a href="<?= site_url('logout') ?>"><i class="fas fa-sign-out-alt"></i>Cerrar sesión</a>
             </nav>
