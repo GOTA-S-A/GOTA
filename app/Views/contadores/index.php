@@ -70,6 +70,11 @@
                                 <?php endif; ?>
                             </td>
                             <td class="text-end">
+                                <?php if ($contador['activo']): ?>
+                                    <a href="/lecturas/nueva/<?= $contador['id'] ?>" class="btn btn-sm btn-primary">
+                                        <i class="fa-solid fa-droplet me-1"></i>Nueva lectura
+                                    </a>
+                                <?php endif; ?>
                                 <a href="/contadores/editar/<?= $contador['id'] ?>" class="btn btn-sm btn-outline-primary">Editar</a>
                                 <?php if ($contador['activo']): ?>
                                     <form action="/contadores/desactivar/<?= $contador['id'] ?>" method="post" class="d-inline"
