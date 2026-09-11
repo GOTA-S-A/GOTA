@@ -230,6 +230,9 @@
                 <?php if ($currentPath !== 'dashboard'): ?>
                     <a class="<?= $activeSection === 'tarifas' ? 'active' : '' ?>" href="<?= site_url('tarifas') ?>"><i class="fas fa-tags"></i>Tarifas</a>
                 <?php endif; ?>
+                <?php if ((int) session()->get('rol_id') === 1): ?>
+                    <a class="<?= $activeSection === 'usuarios' ? 'active' : '' ?>" href="<?= site_url('usuarios') ?>"><i class="fas fa-user-shield"></i>Usuarios</a>
+                <?php endif; ?>
                 <div class="menu-label">Sesión</div>
                 <a href="<?= site_url('logout') ?>"><i class="fas fa-sign-out-alt"></i>Cerrar sesión</a>
             </nav>
