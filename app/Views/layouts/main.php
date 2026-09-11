@@ -194,13 +194,7 @@
     ?>
 
     <?php if (! $sharedShellExcluded && session()->get('isLoggedIn')): ?>
-        <?php
-            $activeSection = explode('/', $currentPath)[0] ?: 'dashboard';
-            $roleName = mb_strtolower(trim((string) session()->get('rol_nombre')));
-            $isAdmin = in_array($roleName, ['administrador', 'desarrollador'], true);
-            $isSecretary = $roleName === 'secretaria';
-            $isReader = $roleName === 'lector';
-        ?>
+        <?php $activeSection = explode('/', $currentPath)[0] ?: 'dashboard'; ?>
         <header class="app-header">
             <div class="brand">
                 <button class="menu-toggle" id="sharedMenuToggle" aria-label="Abrir menú">
@@ -229,21 +223,15 @@
             <nav class="shared-sidebar-menu">
                 <div class="menu-label">Menú Principal</div>
                 <a class="<?= $activeSection === 'dashboard' ? 'active' : '' ?>" href="<?= site_url('dashboard') ?>"><i class="fas fa-th-large"></i>Dashboard</a>
-                <?php if ($isAdmin || $isSecretary): ?>
-                    <a class="<?= $activeSection === 'clientes' ? 'active' : '' ?>" href="<?= site_url('clientes') ?>"><i class="fas fa-users"></i>Clientes</a>
-                <?php endif; ?>
-                <?php if ($isAdmin || $isReader): ?>
-                    <a class="<?= $activeSection === 'contadores' ? 'active' : '' ?>" href="<?= site_url('contadores') ?>"><i class="fas fa-gauge-high"></i>Contadores</a>
-                    <a class="<?= $activeSection === 'pagos' && str_contains($currentPath, 'pendientes') ? 'active' : '' ?>" href="<?= site_url('pagos/pendientes') ?>"><i class="fas fa-file-invoice"></i>Lecturas</a>
-                <?php endif; ?>
-                <?php if ($isAdmin || $isSecretary): ?>
-                    <a class="<?= $activeSection === 'pagos' && ! str_contains($currentPath, 'pendientes') ? 'active' : '' ?>" href="<?= site_url('pagos') ?>"><i class="fas fa-money-bill-wave"></i>Pagos</a>
-                <?php endif; ?>
-                <?php if ($isAdmin && $currentPath !== 'dashboard'): ?>
+                <a class="<?= $activeSection === 'clientes' ? 'active' : '' ?>" href="<?= site_url('clientes') ?>"><i class="fas fa-users"></i>Clientes</a>
+                <a class="<?= $activeSection === 'contadores' ? 'active' : '' ?>" href="<?= site_url('contadores') ?>"><i class="fas fa-gauge-high"></i>Contadores</a>
+                <a class="<?= $activeSection === 'pagos' && str_contains($currentPath, 'pendientes') ? 'active' : '' ?>" href="<?= site_url('pagos/pendientes') ?>"><i class="fas fa-file-invoice"></i>Lecturas</a>
+                <a class="<?= $activeSection === 'pagos' && ! str_contains($currentPath, 'pendientes') ? 'active' : '' ?>" href="<?= site_url('pagos') ?>"><i class="fas fa-money-bill-wave"></i>Pagos</a>
+                <?php if ($currentPath !== 'dashboard'): ?>
                     <a class="<?= $activeSection === 'tarifas' ? 'active' : '' ?>" href="<?= site_url('tarifas') ?>"><i class="fas fa-tags"></i>Tarifas</a>
                     <a class="<?= $activeSection === 'tipos-servicio' ? 'active' : '' ?>" href="<?= site_url('tipos-servicio') ?>"><i class="fas fa-cog"></i>Tipos de Servicio</a>
                 <?php endif; ?>
-                <?php if ($isAdmin): ?>
+                <?php if (mb_strtolower(trim((string) session()->get('rol_nombre'))) === 'administrador'): ?>
                     <a class="<?= $activeSection === 'usuarios' ? 'active' : '' ?>" href="<?= site_url('usuarios') ?>"><i class="fas fa-user-shield"></i>Usuarios</a>
                 <?php endif; ?>
                 <div class="menu-label">Sesión</div>
@@ -257,15 +245,9 @@
 
         <nav class="shared-bottom-nav">
             <a class="<?= $activeSection === 'dashboard' ? 'active' : '' ?>" href="<?= site_url('dashboard') ?>"><i class="fas fa-th-large"></i>Inicio</a>
-            <?php if ($isAdmin || $isSecretary): ?>
-                <a class="<?= $activeSection === 'clientes' ? 'active' : '' ?>" href="<?= site_url('clientes') ?>"><i class="fas fa-users"></i>Clientes</a>
-            <?php endif; ?>
-            <?php if ($isAdmin || $isReader): ?>
-                <a class="<?= $activeSection === 'contadores' ? 'active' : '' ?>" href="<?= site_url('contadores') ?>"><i class="fas fa-gauge-high"></i>Contadores</a>
-            <?php endif; ?>
-            <?php if ($isAdmin || $isSecretary): ?>
-                <a class="<?= $activeSection === 'pagos' ? 'active' : '' ?>" href="<?= site_url('pagos') ?>"><i class="fas fa-money-bill-wave"></i>Pagos</a>
-            <?php endif; ?>
+            <a class="<?= $activeSection === 'clientes' ? 'active' : '' ?>" href="<?= site_url('clientes') ?>"><i class="fas fa-users"></i>Clientes</a>
+            <a class="<?= $activeSection === 'contadores' ? 'active' : '' ?>" href="<?= site_url('contadores') ?>"><i class="fas fa-gauge-high"></i>Contadores</a>
+            <a class="<?= $activeSection === 'pagos' ? 'active' : '' ?>" href="<?= site_url('pagos') ?>"><i class="fas fa-money-bill-wave"></i>Pagos</a>
         </nav>
 
         <script>
