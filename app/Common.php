@@ -13,3 +13,20 @@
  *
  * @see: https://codeigniter.com/user_guide/extending/common.html
  */
+
+if (! function_exists('gota_initials')) {
+	function gota_initials(?string $name): string
+	{
+		$name = trim((string) $name);
+		if ($name === '') {
+			return 'U';
+		}
+
+		$words = preg_split('/\s+/', $name, -1, PREG_SPLIT_NO_EMPTY);
+		if (count($words) > 1) {
+			return strtoupper(mb_substr($words[0], 0, 1) . mb_substr($words[1], 0, 1));
+		}
+
+		return strtoupper(mb_substr($name, 0, 2));
+	}
+}

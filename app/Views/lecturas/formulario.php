@@ -188,7 +188,7 @@
     </div>
     <div class="header-actions">
         <div class="user-avatar" id="userAvatar">
-            <?= strtoupper(substr(session()->get('nombre') ?? 'Admin', 0, 2)) ?>
+            <?= esc(gota_initials(session()->get('usuario_nombre'))) ?>
         </div>
     </div>
 </header>

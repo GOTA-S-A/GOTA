@@ -218,7 +218,7 @@ $hayExceso = (float) ($lectura['consumo_exceso_m3'] ?? 0) > 0;
     </div>
     <div class="header-actions">
         <div class="user-avatar" id="userAvatar">
-            <?= strtoupper(substr(session()->get('nombre') ?? 'Admin', 0, 2)) ?>
+            <?= esc(gota_initials(session()->get('usuario_nombre'))) ?>
         </div>
     </div>
 </header>
