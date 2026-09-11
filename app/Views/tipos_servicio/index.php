@@ -171,56 +171,6 @@
  */
 ?>
 
-<header class="app-header">
-    <div class="brand">
-        <button class="menu-toggle" id="menuToggle" aria-label="Abrir menú">
-            <i class="fas fa-bars"></i>
-        </button>
-        <div>
-            <h5>GOTA</h5>
-            <small>Sistema de Agua</small>
-        </div>
-    </div>
-    <div class="header-actions">
-        <div class="user-avatar" id="userAvatar">
-            <?= strtoupper(substr(session()->get('nombre') ?? 'Admin', 0, 2)) ?>
-        </div>
-    </div>
-</header>
-
-<div class="sidebar-overlay" id="sidebarOverlay"></div>
-
-<aside class="sidebar" id="sidebar">
-    <div class="sidebar-brand">
-        <h4><span>GOTA</span>·agua</h4>
-        <button class="close-sidebar" id="closeSidebar">
-            <i class="fas fa-times"></i>
-        </button>
-    </div>
-    <ul class="sidebar-menu">
-        <li class="menu-label">Menú Principal</li>
-        <li>
-            <a href="<?= site_url('dashboard') ?>" style="color: inherit; text-decoration: none; display: flex; align-items: center; gap: 14px; width: 100%;">
-                <i class="fas fa-th-large"></i>
-                <span>Dashboard</span>
-            </a>
-        </li>
-        <li class="menu-label">Configuración</li>
-        <li class="active">
-            <i class="fas fa-tags"></i>
-            <span>Tipos de Servicio</span>
-        </li>
-        <li class="menu-label">Sesión</li>
-        <li>
-            <a href="<?= site_url('logout') ?>" style="color: inherit; text-decoration: none; display: flex; align-items: center; gap: 14px; width: 100%;">
-                <i class="fas fa-sign-out-alt"></i>
-                <span>Cerrar Sesión</span>
-            </a>
-        </li>
-    </ul>
-</aside>
-
-<main class="main-content">
     <div class="page-header">
         <div>
             <h5 class="fw-bold mb-0" style="font-size: 1.2rem;">Tipos de Servicio</h5>
@@ -306,38 +256,4 @@
             </tbody>
         </table>
     </div>
-</main>
-
-<nav class="bottom-nav">
-    <a href="<?= site_url('dashboard') ?>" class="nav-item">
-        <i class="fas fa-th-large"></i>
-        <span>Dashboard</span>
-    </a>
-    <button class="nav-item active">
-        <i class="fas fa-tags"></i>
-        <span>Tipos</span>
-    </button>
-</nav>
-
-<?= $this->endSection() ?>
-
-<?= $this->section('scripts') ?>
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const menuToggle = document.getElementById('menuToggle');
-        const sidebar = document.getElementById('sidebar');
-        const overlay = document.getElementById('sidebarOverlay');
-        const closeSidebar = document.getElementById('closeSidebar');
-
-        function toggleSidebar() {
-            sidebar.classList.toggle('open');
-            overlay.classList.toggle('active');
-            document.body.style.overflow = sidebar.classList.contains('open') ? 'hidden' : '';
-        }
-
-        menuToggle?.addEventListener('click', toggleSidebar);
-        closeSidebar?.addEventListener('click', toggleSidebar);
-        overlay?.addEventListener('click', toggleSidebar);
-    });
-</script>
 <?= $this->endSection() ?>
