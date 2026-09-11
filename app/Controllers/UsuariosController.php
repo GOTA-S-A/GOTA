@@ -159,7 +159,12 @@ class UsuariosController extends BaseController
 
     private function isAdministrator(): bool
     {
-        return mb_strtolower(trim((string) session()->get('rol_nombre'))) === 'administrador';
+        return in_array(
+            mb_strtolower(trim((string) session()->get('rol_nombre'))),
+            ['desarrollador', 'administrador'],
+            true
+        );
+
     }
 
     private function accessDenied()
