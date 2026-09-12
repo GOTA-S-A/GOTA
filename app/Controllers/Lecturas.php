@@ -100,6 +100,12 @@ class Lecturas extends BaseController
         $tarifaExcesoValor = (float) $tarifa['tarifa_exceso'];
         $montoBase   = $consumoBase * $tarifaBaseValor;
         $montoExceso = $consumoExceso * $tarifaExcesoValor;
+        $montoTotal = round($montoBase + $montoExceso, 2);
+
+        if ($montoTotal <= 0) {
+            return redirect()->back()->withInput()
+                ->with('error', 'No se puede guardar una lectura con un monto total de Q0.00. Verifica el consumo y la tarifa.');
+        }
 
         $usuarioLectorId = $this->resolverUsuarioLector();
 
@@ -147,6 +153,11 @@ class Lecturas extends BaseController
 
         if (! $lectura) {
             throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
+        }
+
+        if ((float) $lectura['monto_total'] <= 0) {
+            return redirect()->to('/dashboard')
+                ->with('error', 'Esta lectura no tiene un monto válido y no puede generar un recibo.');
         }
 
         // La lectura solo guarda contador_id — hay que seguir la relación

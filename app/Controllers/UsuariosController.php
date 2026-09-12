@@ -4,6 +4,7 @@ namespace App\Controllers;
 
 use App\Models\RolesModel;
 use App\Models\UsuarioModel;
+use CodeIgniter\Database\Exceptions\DatabaseException;
 
 class UsuariosController extends BaseController
 {
@@ -59,7 +60,22 @@ class UsuariosController extends BaseController
         unset($datos['password']);
         $datos['created_at'] = date('Y-m-d H:i:s');
 
-        if (! $this->usuarioModel->insert($datos)) {
+        try {
+            $insertado = $this->usuarioModel
+                ->skipValidation(true)
+                ->insert($datos);
+        } catch (DatabaseException $exception) {
+            log_message('error', 'No se pudo crear el usuario: {message}', [
+                'message' => $exception->getMessage(),
+            ]);
+
+            return redirect()->back()->withInput()->with(
+                'error',
+                'No se pudo crear el usuario. Verifica que el correo no esté repetido y que el rol sea válido.'
+            );
+        }
+
+        if (! $insertado) {
             return redirect()->back()->withInput()->with('error', 'No se pudo crear el usuario.');
         }
 

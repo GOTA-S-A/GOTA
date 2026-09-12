@@ -62,6 +62,10 @@ class Pagos extends BaseController
             return redirect()->to('/pagos/pendientes')->with('error', 'La lectura que buscas no existe.');
         }
 
+        if ((float) $lectura['monto_total'] <= 0) {
+            return redirect()->to('/pagos/pendientes')->with('error', 'No se puede registrar un pago de Q0.00.');
+        }
+
         if ($this->pagosModel->tienePagoActivo((int) $lecturaId)) {
             return redirect()->to('/pagos/pendientes')->with('error', 'Esta lectura ya tiene un pago registrado.');
         }
@@ -84,6 +88,10 @@ class Pagos extends BaseController
 
         if (!$lectura) {
             return redirect()->to('/pagos/pendientes')->with('error', 'La lectura que buscas no existe.');
+        }
+
+        if ((float) $lectura['monto_total'] <= 0) {
+            return redirect()->to('/pagos/pendientes')->with('error', 'No se puede registrar un pago de Q0.00.');
         }
 
         // Un pago cubre una sola lectura: si ya hay uno activo, no se permite otro.
@@ -155,6 +163,7 @@ class Pagos extends BaseController
             ->select('Lecturas.*, Clientes.nombre as cliente_nombre, Contadores.codigo as contador_codigo')
             ->join('Contadores', 'Contadores.id = Lecturas.contador_id')
             ->join('Clientes', 'Clientes.id = Contadores.cliente_id')
+            ->where('Lecturas.monto_total >', 0)
             ->whereNotIn('Lecturas.id', function ($builder) {
                 return $builder->select('lectura_id')->from('Pagos')->where('estado !=', 'Anulado');
             })

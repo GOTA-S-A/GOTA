@@ -44,6 +44,7 @@ class Dashboard extends BaseController
             ->select('Lecturas.*, Clientes.nombre as cliente_nombre, Contadores.codigo as contador_codigo')
             ->join('Contadores', 'Contadores.id = Lecturas.contador_id')
             ->join('Clientes', 'Clientes.id = Contadores.cliente_id')
+            ->where('Lecturas.monto_total >', 0)
             ->whereNotIn('Lecturas.id', function($builder) {
                 return $builder->select('lectura_id')->from('Pagos')->where('estado', 'Completado');
             })
