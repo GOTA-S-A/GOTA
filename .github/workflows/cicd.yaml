@@ -96,4 +96,4 @@ jobs:
             --min-instances=0 \
             --max-instances=2 \
             --add-cloudsql-instances="${{ env.CLOUD_SQL_INSTANCE }}" \
-            --set-env-vars="CI_ENVIRONMENT=production,app.baseURL=${{ secrets.APP_BASE_URL }},DB_HOST=/cloudsql/${{ env.CLOUD_SQL_INSTANCE }},DB_NAME=${{ secrets.DB_NAME }},DB_USER=${{ secrets.DB_USER }},DB_PASSWORD=${{ secrets.DB_PASSWORD }},DB_DRIVER=MySQLi,DB_PORT=3306,ENCRYPTION_KEY=${{ secrets.ENCRYPTION_KEY }}"
+            --set-env-vars="CI_ENVIRONMENT=production,app.baseURL=${{ secrets.APP_BASE_URL }},database.default.hostname=/cloudsql/${{ env.CLOUD_SQL_INSTANCE }},database.default.database=${{ secrets.DB_NAME }},database.default.username=${{ secrets.DB_USER }},database.default.password=${{ secrets.DB_PASSWORD }},database.default.DBDriver=MySQLi,database.default.port=3306,encryption.key=${{ secrets.ENCRYPTION_KEY }}"

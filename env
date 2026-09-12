@@ -30,21 +30,13 @@
 # DATABASE
 #--------------------------------------------------------------------
 
-# Desarrollo local:
-# DB_HOST = localhost
-# DB_NAME = gota_db
-# DB_USER = ulises
-# DB_PASSWORD = tu_contrasena_local
-# DB_DRIVER = MySQLi
-# DB_PORT = 3306
-
-# Producción en Cloud Run con Cloud SQL:
-# DB_HOST = /cloudsql/PROJECT_ID:REGION:INSTANCE_NAME
-# DB_NAME = gota_db
-# DB_USER = usuario_cloud_sql
-# DB_PASSWORD = contrasena_cloud_sql
-# DB_DRIVER = MySQLi
-# DB_PORT = 3306
+# database.default.hostname = localhost
+# database.default.database = ci4
+# database.default.username = root
+# database.default.password = root
+# database.default.DBDriver = MySQLi
+# database.default.DBPrefix =
+# database.default.port = 3306
 
 # If you use MySQLi as tests, first update the values of Config\Database::$tests.
 # database.tests.hostname = localhost
