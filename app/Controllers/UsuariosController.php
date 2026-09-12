@@ -58,7 +58,6 @@ class UsuariosController extends BaseController
 
         $datos['password_hash'] = password_hash($datos['password'], PASSWORD_DEFAULT);
         unset($datos['password']);
-        $datos['created_at'] = date('Y-m-d H:i:s');
 
         try {
             $insertado = $this->usuarioModel
